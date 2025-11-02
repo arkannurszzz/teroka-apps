@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={inter.className}>
-        <SiteHeaderNavbar />  {/* Tambahin navbar di atas */}
-        <main className="min-h-screen">  {/* Wrapper buat content, biar footer di bawah */}
+        <SiteHeaderNavbar />
+        <main className="min-h-screen">
           {children}
         </main>
-        <SiteFooter />  {/* Footer di bawah */}
+        <SiteFooter />
       </body>
     </html>
   );

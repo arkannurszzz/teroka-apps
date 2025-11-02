@@ -1,3 +1,125 @@
 @import "tailwindcss";
 
-/* Custom styles kamu di sini, kalau ada */
+@plugin "tailwindcss-animate";
+
+/* Light Theme Default - Balik ke awal */
+:root {
+  --font-montserrat: var(--font-montserrat);
+  --radius: 0.625rem;
+  --background: #ffffff; /* Putih light */
+  --foreground: #111827; /* Hitam untuk text */
+  --card: #ffffff; /* Card putih */
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #D9302C; /* Merah lo buat accent */
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6; /* Gray-100 secondary */
+  --secondary-foreground: #374151;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280; /* Gray-500 */
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
+  --destructive: #ef4444;
+  --border: #e5e7eb; /* Gray-200 border */
+  --input: #e5e7eb;
+  --ring: #D9302C;
+  --chart-1: #D9302C;
+  --chart-2: #10b981;
+  --chart-3: #3b82f6;
+  --chart-4: #8b5cf6;
+  --chart-5: #ef4444;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #D9302C;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3f4f6;
+  --sidebar-accent-foreground: #111827;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #D9302C;
+}
+
+body {
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+/* Animation keyframes - Tetep buat scroll effect */
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .animate-scroll-left-md {
+    animation: scroll-left 30s linear infinite;
+  }
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Hide scrollbar - more comprehensive */
+.scrollbar-hide {
+  -ms-overflow-style: none !important;  /* Internet Explorer 10+ */
+  scrollbar-width: none !important;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;  /* Safari and Chrome */
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+.scrollbar-hide::-webkit-scrollbar-track {
+  display: none !important;
+}
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  display: none !important;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
