@@ -4,17 +4,16 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section>
-      <div className="relative h-[80vh] md:h-[85vh] overflow-hidden">
+      <div className="relative h-[85dvh] md:h-[85dvh] overflow-hidden">
         <Image
           src="/images/header.jpeg"
           alt="Pasar UMKM Lokal"
           fill
-          className="object-cover object-position-top"
+          className="object-cover object-position-top size-full"
           priority
         />
-        <div className="absolute inset-0 bg-black/40" />
 
-        <div className="absolute inset-0 flex flex-col items-center justify-start pt-36 md:pt-44 text-center text-white px-4">
+        <div className="absolute inset-0 top-0 left-0 w-full h-full flex items-center justify-center text-white z-10 bg-black/40">
           <div className="flex flex-col items-center max-w-4xl mx-auto w-full">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 leading-tight whitespace-normal md:whitespace-nowrap text-center">
               Temukan dan Dukung UMKM di Sekitarmu.
@@ -35,7 +34,7 @@ export default function Hero() {
       </div>
 
       {/* Section Deskripsi dengan Efek Scroll ke Kiri */}
-      <div className="-mt-2 md:-mt-2 relative py-4 md:py-6 overflow-hidden bg-[#D9302C]">
+      <div className="relative py-4 md:py-6 overflow-hidden bg-[#D9302C] h-[5dvh]">
         <div className="w-full">
           <div className="flex overflow-hidden whitespace-nowrap w-screen">
             <p className="text-lg md:text-xl font-medium text-white tracking-wide animate-scroll-left animate-scroll-left-md px-3 md:px-6 min-w-full">

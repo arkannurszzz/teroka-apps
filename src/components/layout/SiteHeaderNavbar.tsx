@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Montserrat } from 'next/font/google';
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Montserrat } from "next/font/google";
 
-const montserrat = Montserrat({ 
-  subsets: ['latin'], 
-  weight: ['700'],
-  variable: '--font-montserrat'
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-montserrat",
 });
 
 export default function SiteHeaderNavbar() {
@@ -19,18 +19,23 @@ export default function SiteHeaderNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { label: 'Beranda', href: '/' },
-    { label: 'Jelajahi', href: '/search' },
-    { label: 'Daftarkan Usaha', href: '/register' },
+    { label: "Beranda", href: "/" },
+    { label: "Jelajahi", href: "/search" },
+    { label: "Daftarkan Usaha", href: "/register" },
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header className="border-b border-gray-200 bg-white"> {/* Balik ke light */}
-      <nav className={`container mx-auto flex items-center justify-between px-4 py-4 md:px-6 ${montserrat.className}`}>
+    <header className="border-b border-gray-200 bg-white h-[10dvh]">
+      {/* Balik ke light */}
+      <nav
+        className={`container h-full mx-auto flex items-center justify-between px-4 py-4 md:px-6 ${montserrat.className}`}
+      >
         <Link href="/" className="flex items-center space-x-1">
-          <span className={`text-2xl md:text-3xl font-bold tracking-tight leading-none ${montserrat.className} text-gray-900`}>
+          <span
+            className={`text-2xl md:text-3xl font-bold tracking-tight leading-none ${montserrat.className} text-gray-900`}
+          >
             TER
           </span>
           <Image
@@ -40,7 +45,9 @@ export default function SiteHeaderNavbar() {
             height={20}
             className="h-5 w-auto md:h-6 lg:h-7"
           />
-          <span className={`text-2xl md:text-3xl font-bold tracking-tight leading-none ${montserrat.className} text-gray-900`}>
+          <span
+            className={`text-2xl md:text-3xl font-bold tracking-tight leading-none ${montserrat.className} text-gray-900`}
+          >
             KA
           </span>
         </Link>
@@ -54,8 +61,8 @@ export default function SiteHeaderNavbar() {
                 <Link
                   href={item.href}
                   className={clsx(
-                    'relative pb-1 transition-colors hover:text-gray-900',
-                    isActive ? 'text-gray-900' : 'text-gray-600'
+                    "relative pb-1 transition-colors hover:text-gray-900",
+                    isActive ? "text-gray-900" : "text-gray-600"
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -81,7 +88,6 @@ export default function SiteHeaderNavbar() {
           )}
         </button>
       </nav>
-
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <ul className="px-4 py-4 space-y-2">
@@ -93,8 +99,10 @@ export default function SiteHeaderNavbar() {
                   <Link
                     href={item.href}
                     className={clsx(
-                      'block py-2 px-3 text-base font-medium transition-colors hover:text-gray-900 rounded',
-                      isActive ? 'text-gray-900 border-b-2 border-[#D9302C]' : 'text-gray-600'
+                      "block py-2 px-3 text-base font-medium transition-colors hover:text-gray-900 rounded",
+                      isActive
+                        ? "text-gray-900 border-b-2 border-[#D9302C]"
+                        : "text-gray-600"
                     )}
                     onClick={() => setIsMenuOpen(false)}
                   >
