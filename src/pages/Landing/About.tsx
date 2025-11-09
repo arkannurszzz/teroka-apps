@@ -13,7 +13,7 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="relative h-64 md:h-80 rounded-lg overflow-hidden shadow-lg">
             <Image
-              src="/images/page1/page1.jpeg"
+              src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80"
               alt="Kenapa Teroka Hadir"
               fill
               className="object-cover"

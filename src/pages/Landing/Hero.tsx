@@ -6,10 +6,10 @@ export default function Hero() {
     <section>
       <div className="relative h-[85dvh] md:h-[85dvh] overflow-hidden">
         <Image
-          src="/images/header.jpeg"
+          src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80"
           alt="Pasar UMKM Lokal"
           fill
-          className="object-cover object-position-top size-full"
+          className="object-cover object-center size-full"
           priority
         />
 
