@@ -3,8 +3,11 @@ export interface UmkmFormData {
   category: string;
   description: string;
   address: string;
-  city: string;
-  province: string;
+  province_id: string;  // ID from wilayah.id API
+  province: string;      // Province name
+  city_id: string;       // ID from wilayah.id API (regency)
+  city: string;          // City/Regency name
+  district: string;      // District/Kecamatan name
   contact: string;
   operating_hours_start: string;
   operating_hours_end: string;
@@ -19,8 +22,11 @@ export interface FormErrors {
   category?: string;
   description?: string;
   address?: string;
-  city?: string;
+  province_id?: string;
   province?: string;
+  city_id?: string;
+  city?: string;
+  district?: string;
   contact?: string;
   operating_hours_start?: string;
   operating_hours_end?: string;
@@ -35,8 +41,11 @@ export const initialFormData: UmkmFormData = {
   category: 'makanan',
   description: '',
   address: '',
-  city: '',
+  province_id: '',
   province: '',
+  city_id: '',
+  city: '',
+  district: '',
   contact: '',
   operating_hours_start: '08:00',
   operating_hours_end: '17:00',
