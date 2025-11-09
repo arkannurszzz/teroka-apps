@@ -1,12 +1,13 @@
 import { Input } from '@/components/ui/input';
-import type { UmkmFormData } from '../types';
+import type { UmkmFormData, FormErrors } from '../types';
 
 interface LocationSectionProps {
   formData: UmkmFormData;
+  errors: FormErrors;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function LocationSection({ formData, onChange }: LocationSectionProps) {
+export function LocationSection({ formData, errors, onChange }: LocationSectionProps) {
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b">
@@ -27,8 +28,11 @@ export function LocationSection({ formData, onChange }: LocationSectionProps) {
             value={formData.address}
             onChange={onChange}
             placeholder="Jl. Merdeka No. 123"
-            className="w-full"
+            className={`w-full ${errors.address ? 'border-red-500' : ''}`}
           />
+          {errors.address && (
+            <p className="mt-1 text-xs text-red-500">{errors.address}</p>
+          )}
         </div>
 
         {/* Kota & Provinsi */}
@@ -45,8 +49,11 @@ export function LocationSection({ formData, onChange }: LocationSectionProps) {
               value={formData.city}
               onChange={onChange}
               placeholder="Jakarta"
-              className="w-full"
+              className={`w-full ${errors.city ? 'border-red-500' : ''}`}
             />
+            {errors.city && (
+              <p className="mt-1 text-xs text-red-500">{errors.city}</p>
+            )}
           </div>
 
           <div>
@@ -61,8 +68,11 @@ export function LocationSection({ formData, onChange }: LocationSectionProps) {
               value={formData.province}
               onChange={onChange}
               placeholder="DKI Jakarta"
-              className="w-full"
+              className={`w-full ${errors.province ? 'border-red-500' : ''}`}
             />
+            {errors.province && (
+              <p className="mt-1 text-xs text-red-500">{errors.province}</p>
+            )}
           </div>
         </div>
       </div>

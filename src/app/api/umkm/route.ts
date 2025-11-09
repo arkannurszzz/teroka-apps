@@ -265,6 +265,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Use mock response if Supabase not configured
+    if (!isSupabaseConfigured) {
+      console.log('📦 Using mock response for POST (Supabase not configured)');
+
+      // Simulate success response
+      const mockResponse = {
+        id: `mock-${Date.now()}`,
+        ...body,
+        created_at: new Date().toISOString(),
+        rating: 0,
+        total_reviews: 0,
+        is_active: true
+      };
+
+      return NextResponse.json({
+        success: true,
+        data: mockResponse,
+        message: 'UMKM berhasil didaftarkan! (mock data - Supabase not configured)'
+      }, { status: 201 });
+    }
+
     // Insert new UMKM to Supabase
     const { data: newUmkm, error } = await supabase
       .from('umkm')
