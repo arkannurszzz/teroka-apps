@@ -44,15 +44,24 @@ Panduan singkat setup Supabase untuk Teroka App.
 
 ### 5. Setup Environment Variables
 
-1. Buka file **`.env.local`** di root project (sudah dibuat otomatis)
-2. Replace dengan credentials yang kamu copy tadi:
+1. Copy file **`.env.local`** menjadi **`.env`**:
+   ```bash
+   # Windows
+   copy .env.local .env
 
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
-```
+   # Mac/Linux
+   cp .env.local .env
+   ```
 
-3. Save file
+2. Buka file **`.env`** dan replace dengan credentials yang kamu copy tadi:
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...
+   ```
+
+3. Save file `.env`
+
+**Note:** File `.env` tidak akan ter-commit ke git (sudah di-gitignore). File `.env.local` adalah template yang di-commit sebagai contoh.
 
 ### 6. Test Aplikasi
 
