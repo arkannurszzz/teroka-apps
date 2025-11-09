@@ -150,6 +150,68 @@ export async function GET(
         );
       }
 
+      // Mock products for this UMKM
+      const mockProducts = [
+        {
+          id: `${umkm.id}-prod-1`,
+          umkm_id: umkm.id,
+          name: umkm.category === 'makanan' ? 'Paket Komplit' : umkm.category === 'minuman' ? 'Kopi Spesial' : 'Layanan Premium',
+          description: 'Produk unggulan kami dengan kualitas terbaik',
+          price: 25000,
+          image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
+          is_available: true,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: `${umkm.id}-prod-2`,
+          umkm_id: umkm.id,
+          name: umkm.category === 'makanan' ? 'Paket Hemat' : umkm.category === 'minuman' ? 'Es Kopi Susu' : 'Layanan Reguler',
+          description: 'Pilihan hemat dengan rasa yang tetap enak',
+          price: 15000,
+          image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400',
+          is_available: true,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: `${umkm.id}-prod-3`,
+          umkm_id: umkm.id,
+          name: umkm.category === 'makanan' ? 'Paket Spesial' : umkm.category === 'minuman' ? 'Teh Manis' : 'Layanan Express',
+          description: 'Produk spesial dengan bahan pilihan',
+          price: 30000,
+          image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',
+          is_available: true,
+          created_at: new Date().toISOString()
+        }
+      ];
+
+      // Mock reviews for this UMKM
+      const mockReviews = [
+        {
+          id: `${umkm.id}-rev-1`,
+          umkm_id: umkm.id,
+          user_name: 'Andi Pratama',
+          rating: 5,
+          comment: 'Pelayanan sangat memuaskan! Kualitas produk juga bagus. Recommended banget!',
+          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
+        },
+        {
+          id: `${umkm.id}-rev-2`,
+          umkm_id: umkm.id,
+          user_name: 'Siti Nurhaliza',
+          rating: 4,
+          comment: 'Bagus, tapi pengiriman agak lama. Overall puas dengan produknya.',
+          created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
+        },
+        {
+          id: `${umkm.id}-rev-3`,
+          umkm_id: umkm.id,
+          user_name: 'Budi Santoso',
+          rating: 5,
+          comment: 'Sudah langganan di sini, selalu puas dengan kualitas dan harganya!',
+          created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString() // 2 weeks ago
+        }
+      ];
+
       const transformedData = {
         id: umkm.id,
         name: umkm.name,
@@ -170,8 +232,8 @@ export async function GET(
         employee_count: umkm.employee_count,
         total_customers: umkm.total_customers,
         total_reviews: umkm.total_reviews,
-        products: [],
-        reviews: []
+        products: mockProducts,
+        reviews: mockReviews
       };
 
       return NextResponse.json({
