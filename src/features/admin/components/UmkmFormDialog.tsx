@@ -169,10 +169,10 @@ export function UmkmFormDialog({ open, onOpenChange, umkm, onSubmit }: UmkmFormD
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto px-1">
+          <div className="grid gap-6 py-6 max-h-[65vh] overflow-y-auto px-6">
             {/* Informasi Dasar */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-gray-700 border-b pb-2">
+              <h3 className="font-semibold text-base text-gray-800 border-b pb-2 -mx-1">
                 Informasi Dasar
               </h3>
 
@@ -244,7 +244,7 @@ export function UmkmFormDialog({ open, onOpenChange, umkm, onSubmit }: UmkmFormD
 
             {/* Lokasi */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-gray-700 border-b pb-2">Lokasi</h3>
+              <h3 className="font-semibold text-base text-gray-800 border-b pb-2 -mx-1">Lokasi</h3>
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
@@ -329,7 +329,7 @@ export function UmkmFormDialog({ open, onOpenChange, umkm, onSubmit }: UmkmFormD
 
             {/* Kontak & Operasional */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-gray-700 border-b pb-2">
+              <h3 className="font-semibold text-base text-gray-800 border-b pb-2 -mx-1">
                 Kontak & Operasional
               </h3>
 
@@ -366,7 +366,7 @@ export function UmkmFormDialog({ open, onOpenChange, umkm, onSubmit }: UmkmFormD
 
             {/* Informasi Tambahan */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-gray-700 border-b pb-2">
+              <h3 className="font-semibold text-base text-gray-800 border-b pb-2 -mx-1">
                 Informasi Tambahan
               </h3>
 

@@ -27,7 +27,7 @@ export function ImportGuideDialog({ open, onOpenChange, onDownloadTemplate }: Im
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-6 py-6 px-6">
           {/* Alert */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex gap-3">
             <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
@@ -41,7 +41,7 @@ export function ImportGuideDialog({ open, onOpenChange, onDownloadTemplate }: Im
 
           {/* Format CSV */}
           <div>
-            <h3 className="font-semibold text-sm mb-3">Format File CSV</h3>
+            <h3 className="font-semibold text-base mb-3 text-gray-800">Format File CSV</h3>
             <div className="bg-gray-50 border rounded-lg p-4 overflow-x-auto">
               <pre className="text-xs font-mono">
 {`name,category,description,address,city,province,contact,operating_hours,owner_name,established_year,employee_count,image
@@ -53,7 +53,7 @@ Toko Baju Cantik,fashion,Toko pakaian wanita modern,Jl. Sudirman No. 123,Bandung
 
           {/* Column Descriptions */}
           <div>
-            <h3 className="font-semibold text-sm mb-3">Deskripsi Kolom</h3>
+            <h3 className="font-semibold text-base mb-3 text-gray-800">Deskripsi Kolom</h3>
             <div className="border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b">
@@ -147,7 +147,7 @@ Toko Baju Cantik,fashion,Toko pakaian wanita modern,Jl. Sudirman No. 123,Bandung
 
           {/* Important Notes */}
           <div>
-            <h3 className="font-semibold text-sm mb-3">Catatan Penting</h3>
+            <h3 className="font-semibold text-base mb-3 text-gray-800">Catatan Penting</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex gap-2">
                 <span className="text-red-600">•</span>

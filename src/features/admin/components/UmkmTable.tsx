@@ -90,37 +90,31 @@ export function UmkmTable({ data, onEdit, onDelete, onView }: UmkmTableProps) {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
+                  <button
                     onClick={() => onView(umkm.id)}
-                    className="h-8 w-8 p-0"
+                    className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 transition-colors"
                     title="Lihat Detail"
                   >
                     <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
+                  </button>
+                  <button
                     onClick={() => onEdit(umkm)}
-                    className="h-8 w-8 p-0"
+                    className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700 transition-colors"
                     title="Edit"
                   >
                     <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
+                  </button>
+                  <button
                     onClick={() => {
                       if (confirm(`Apakah Anda yakin ingin menghapus "${umkm.name}"?`)) {
                         onDelete(umkm.id);
                       }
                     }}
-                    className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
+                    className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 transition-colors"
                     title="Hapus"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
               </TableCell>
             </TableRow>
