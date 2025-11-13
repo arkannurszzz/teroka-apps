@@ -35,7 +35,7 @@ const TerokaCard = () => {
               className="object-cover transition-transform duration-500 hover:scale-105"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
           </motion.div>
           {/* Right side: Text content */}
           <motion.div
@@ -71,7 +71,7 @@ const TerokaCard = () => {
             >
             <Link
               href="/register"
-              className="inline-flex items-center bg-gradient-to-r from-[#D9302C] to-[#f04c24] hover:from-[#f04c24] hover:to-[#D9302C] text-white font-semibold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
+              className="inline-flex items-center bg-linear-to-r from-[#D9302C] to-[#f04c24] hover:from-[#f04c24] hover:to-[#D9302C] text-white font-semibold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
             >
               Daftarkan Usahamu Sekarang
               <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

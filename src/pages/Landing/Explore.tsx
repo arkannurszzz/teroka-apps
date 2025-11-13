@@ -59,8 +59,9 @@ export default function Explore() {
     fetchUmkm();
   }, []);
 
-  // Duplicate array for infinite scroll effect
-  const displayUmkm = [...umkmList, ...umkmList];
+  // Create items for marquee - ensure we have at least 8 items for smooth scrolling
+  const marqueeItems = umkmList.length > 0 ? umkmList : [];
+  const displayUmkm = [...marqueeItems, ...marqueeItems];
 
   // Handler untuk pause/resume
   const handleMouseEnter = () => setIsPaused(true);
@@ -103,28 +104,52 @@ export default function Explore() {
             Temukan UMKM terbaik di berbagai kategori
           </p>
         </motion.div>
-        {/* No scrollbar, pure auto */}
+        {/* Marquee container for smooth infinite scroll */}
         <motion.div
           className="overflow-hidden"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.2 }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          {/* Animasi marquee */}
-          <div className={`flex gap-4 md:gap-6 whitespace-nowrap animate-marquee ${isPaused ? 'paused' : ''}`}>
+          <div
+            className={`flex animate-marquee whitespace-nowrap ${isPaused ? 'paused' : ''}`}
+            style={{ animationDuration: '15s' }}
+          >
+            {/* First set of UMKM items */}
             {displayUmkm.map((umkm, index) => (
               <Link
                 key={`${umkm.id}-${index}`}
                 href={`/umkm/${umkm.id}`}
-                className="relative w-64 h-48 md:h-64 shrink-0 rounded-lg overflow-hidden shadow-md"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                className="relative w-64 h-48 md:h-64 shrink-0 rounded-lg overflow-hidden shadow-md mx-2 md:mx-3"
               >
                 <Image
                   src={umkm.image}
                   alt={umkm.name}
                   fill
+                  className="object-cover transition-transform duration-300 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                  <h3 className="font-semibold text-lg mb-1">{umkm.name}</h3>
+                  <p className="text-sm opacity-90 capitalize">{umkm.category} • {umkm.city}</p>
+                </div>
+              </Link>
+            ))}
+            {/* Second set of UMKM items for seamless loop */}
+            {displayUmkm.map((umkm, index) => (
+              <Link
+                key={`${umkm.id}-${index}-duplicate`}
+                href={`/umkm/${umkm.id}`}
+                className="relative w-64 h-48 md:h-64 shrink-0 rounded-lg overflow-hidden shadow-md mx-2 md:mx-3"
+              >
+                <Image
+                  src={umkm.image}
+                  alt={umkm.name}
+                  fill
+
                   className="object-cover transition-transform duration-300 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
@@ -145,9 +170,12 @@ export default function Explore() {
         >
           <Link
             href="/search"
-            className="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+            className="inline-flex items-center bg-linear-to-r from-[#D9302C] to-[#f04c24] hover:from-[#f04c24] hover:to-[#D9302C] text-white font-semibold py-3 px-8 rounded-full text-base transition-all duration-300 shadow-lg hover:shadow-xl group"
           >
             Lihat Semua UMKM
+            <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
         </motion.div>
       </div>
