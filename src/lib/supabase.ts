@@ -1,32 +1,26 @@
-import { createClient } from '@supabase/supabase-js'
-import type { Database } from '@/types/database'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Check if Supabase is configured
-const isSupabaseConfigured =
-  supabaseUrl &&
-  supabaseAnonKey &&
+// Check if Supabase is properly configured with real values (not placeholders)
+const isValidSupabaseUrl = supabaseUrl &&
   !supabaseUrl.includes('your-project-id') &&
-  !supabaseAnonKey.includes('your-anon-key')
+  supabaseUrl.startsWith('https://') &&
+  supabaseUrl.endsWith('.supabase.co')
+
+const isValidSupabaseKey = supabaseAnonKey &&
+  !supabaseAnonKey.includes('your-anon-key-here') &&
+  supabaseAnonKey.length > 20
+
+export const isSupabaseConfigured = Boolean(isValidSupabaseUrl && isValidSupabaseKey)
+
+export const supabase: SupabaseClient | null = isSupabaseConfigured
+  ? createClient(supabaseUrl!, supabaseAnonKey!)
+  : null
 
 if (!isSupabaseConfigured) {
-  console.warn('⚠️  Supabase not configured. Using mock data fallback.')
-  console.warn('💡 To use Supabase: Update .env.local with your credentials')
+  console.warn('⚠️ Supabase not configured with valid credentials')
+  console.warn('Please add real NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to your .env.local file')
+  console.warn('Using mock data for development...')
 }
-
-// Create Supabase client (will use mock data if not configured)
-export const supabase = isSupabaseConfigured
-  ? createClient<Database>(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: false,
-      },
-    })
-  : createClient<Database>('https://placeholder.supabase.co', 'placeholder-key', {
-      auth: {
-        persistSession: false,
-      },
-    })
-
-export { isSupabaseConfigured }

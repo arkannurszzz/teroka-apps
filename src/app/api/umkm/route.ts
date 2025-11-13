@@ -180,6 +180,10 @@ export async function GET() {
     }
 
     // Fetch all active UMKM from Supabase
+    if (!supabase) {
+      throw new Error('Supabase client is not configured');
+    }
+
     const { data: umkmData, error } = await supabase
       .from('umkm')
       .select('*')
@@ -266,6 +270,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new UMKM to Supabase
+    if (!supabase) {
+      throw new Error('Supabase client is not configured');
+    }
+
     const { data: newUmkm, error } = await supabase
       .from('umkm')
       .insert([

@@ -43,6 +43,10 @@ export default function Results({
     if (selectedCategory === 'semua') {
       return 'Semua UMKM Lokal';
     }
+    // Safety check for prerendering
+    if (!selectedCategory || !categoryConfig[selectedCategory]) {
+      return 'Hasil Pencarian';
+    }
     return `Kategori ${categoryConfig[selectedCategory].label}`;
   };
 
@@ -54,7 +58,7 @@ export default function Results({
         <p className="text-center text-gray-500 animate-pulse">Memuat UMKM...</p>
       )}
       {error && <p className="text-center text-red-500">Error: {error}</p>}
-      {!loading && !error && filteredUmkm.length === 0 && (
+      {!loading && !error && (!filteredUmkm || filteredUmkm.length === 0) && (
         <p className="text-center text-gray-500">
           {searchQuery || selectedCategory !== 'semua'
             ? 'Tidak ada UMKM yang cocok.'
@@ -63,7 +67,7 @@ export default function Results({
       )}
 
       <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
-        {filteredUmkm.map((umkm, index) => (
+        {filteredUmkm?.map((umkm, index) => (
           <motion.div
             key={umkm.id}
             initial={{ opacity: 0, y: 20 }}

@@ -107,7 +107,8 @@ Menyimpan review dan rating dari pelanggan.
 2. Sign up / Login
 3. Klik **"New Project"**
 4. Isi detail project:
-   - **Name:** teroka-app (atau nama lain)
+   - **Name:** teroka-app
+   -  (atau nama lain)
    - **Database Password:** Buat password yang kuat
    - **Region:** Southeast Asia (Singapore) - paling dekat dengan Indonesia
 5. Tunggu project selesai dibuat (~2 menit)

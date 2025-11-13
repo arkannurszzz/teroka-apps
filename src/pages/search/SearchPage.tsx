@@ -9,8 +9,8 @@ import { Umkm } from '@/types/umkm';
 import Hero from './Hero';
 import CategoryTabs from './CategoryTabs';
 import Results from './Results';
-import { WhyTeroka } from './WhyTeroka';
-import { FaqCompact } from './FaqCompact';
+import WhyTeroka from './WhyTeroka';
+import FaqCompact from './FaqCompact';
 
 type Category = 'semua' | 'makanan' | 'minuman' | 'jasa' | 'fashion';
 

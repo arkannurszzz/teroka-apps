@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Store, HeartHandshake, ShieldCheck } from 'lucide-react';
 
-export function WhyTeroka() {
+export default function WhyTeroka() {
   const reasons = [
     {
       icon: Store,

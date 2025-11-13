@@ -1,7 +1,7 @@
 'use client';
 import { MessageCircle } from 'lucide-react';
 
-export function FaqCompact() {
+export default function FaqCompact() {
   const faqs = [
     'Apa itu Teroka?',
     'Bagaimana cara menggunakannya?',

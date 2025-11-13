@@ -16,7 +16,7 @@ const mockUmkmData = [
     rating: 4.5,
     contact: '+62812345678',
     operating_hours: '08:00-21:00',
-    image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
+    image: '/images/landing/laundry.webp',
     owner_name: 'Bu Ani',
     established_year: 2015,
     employee_count: 5,
@@ -126,7 +126,7 @@ const mockUmkmData = [
 ];
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -182,6 +182,10 @@ export async function GET(
     }
 
     // Fetch UMKM with products and reviews from Supabase
+    if (!supabase) {
+      throw new Error('Supabase client is not configured');
+    }
+
     const { data: umkm, error: umkmError } = await supabase
       .from('umkm')
       .select(`

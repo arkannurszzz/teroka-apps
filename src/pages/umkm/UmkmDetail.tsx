@@ -18,6 +18,17 @@ interface UmkmDetailProps {
 export default function UmkmDetail({ umkm }: UmkmDetailProps) {
   const [isFavorite, setIsFavorite] = useState(false);
 
+  // Safety check for prerendering
+  if (!umkm) {
+    return (
+      <Container className="py-8">
+        <div className="text-center">
+          <p>Loading...</p>
+        </div>
+      </Container>
+    );
+  }
+
   const handleBack = () => {
     window.history.back();
   };

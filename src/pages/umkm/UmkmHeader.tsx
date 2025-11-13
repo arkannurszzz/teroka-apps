@@ -8,6 +8,15 @@ interface UmkmHeaderProps {
 }
 
 export default function UmkmHeader({ umkm }: UmkmHeaderProps) {
+  // Safety check for prerendering
+  if (!umkm) {
+    return (
+      <div className="relative">
+        <div className="h-64 md:h-80 bg-gray-200 animate-pulse" />
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       {/* Cover Image */}
@@ -18,7 +27,7 @@ export default function UmkmHeader({ umkm }: UmkmHeaderProps) {
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
         {/* Overlay Content */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
