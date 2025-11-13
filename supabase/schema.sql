@@ -27,8 +27,11 @@ CREATE TABLE IF NOT EXISTS public.umkm (
 
     -- Location Information
     address TEXT NOT NULL,
-    city VARCHAR(100) NOT NULL,
+    province_id VARCHAR(10),          -- ID dari wilayah.id API untuk province
     province VARCHAR(100) NOT NULL,
+    city_id VARCHAR(10),              -- ID dari wilayah.id API untuk city/regency
+    city VARCHAR(100) NOT NULL,
+    district VARCHAR(100),            -- Nama kecamatan
     latitude DECIMAL(10, 8) NOT NULL,
     longitude DECIMAL(11, 8) NOT NULL,
 

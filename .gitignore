@@ -30,12 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files - ignore all environment files with actual credentials
 .env
 .env*.local
-!.env.local
 
-# allow template files
+# allow template/example files to be committed
 !.env.example
 
 # vercel

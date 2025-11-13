@@ -97,8 +97,13 @@ export default function UmkmDetail({ umkm }: UmkmDetailProps) {
 
       <Container className="py-6 space-y-8">
         <UmkmInfo umkm={umkm} />
-        <UmkmProducts umkmId={umkm.id} />
-        <UmkmReviews umkmId={umkm.id} />
+        <UmkmProducts umkmId={umkm.id} products={umkm.products} />
+        <UmkmReviews
+          umkmId={umkm.id}
+          reviews={umkm.reviews}
+          averageRating={umkm.rating}
+          totalReviews={umkm.total_reviews}
+        />
       </Container>
 
       {/* Fixed Bottom Action */}

@@ -269,6 +269,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Use mock response if Supabase not configured
+    if (!isSupabaseConfigured) {
+      console.log('📦 Using mock response for POST (Supabase not configured)');
+
+      // Simulate success response
+      const mockResponse = {
+        id: `mock-${Date.now()}`,
+        ...body,
+        created_at: new Date().toISOString(),
+        rating: 0,
+        total_reviews: 0,
+        is_active: true
+      };
+
+      return NextResponse.json({
+        success: true,
+        data: mockResponse,
+        message: 'UMKM berhasil didaftarkan! (mock data - Supabase not configured)'
+      }, { status: 201 });
+    }
+
     // Insert new UMKM to Supabase
     if (!supabase) {
       throw new Error('Supabase client is not configured');
@@ -316,6 +337,191 @@ export async function POST(request: NextRequest) {
         success: false,
         data: null,
         message: 'Gagal mendaftarkan UMKM. Silakan coba lagi.'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: 'ID UMKM tidak ditemukan'
+        },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+
+    // Validate required fields
+    const requiredFields = ['name', 'category', 'address', 'city', 'province', 'contact', 'operating_hours'];
+    const missingFields = requiredFields.filter(field => !body[field]);
+
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: `Field yang wajib diisi: ${missingFields.join(', ')}`
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate category
+    const validCategories = ['makanan', 'minuman', 'jasa', 'fashion', 'lainnya'];
+    if (!validCategories.includes(body.category)) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: 'Kategori tidak valid'
+        },
+        { status: 400 }
+      );
+    }
+
+    // Use mock response if Supabase not configured
+    if (!isSupabaseConfigured) {
+      console.log('📦 Using mock response for PUT (Supabase not configured)');
+
+      const mockResponse = {
+        id,
+        ...body,
+        updated_at: new Date().toISOString()
+      };
+
+      return NextResponse.json({
+        success: true,
+        data: mockResponse,
+        message: 'UMKM berhasil diperbarui! (mock data - Supabase not configured)'
+      });
+    }
+
+    // Update UMKM in Supabase
+    const { data: updatedUmkm, error } = await supabase
+      .from('umkm')
+      .update({
+        name: body.name,
+        category: body.category,
+        description: body.description || null,
+        address: body.address,
+        city: body.city,
+        province: body.province,
+        latitude: body.latitude || 0,
+        longitude: body.longitude || 0,
+        contact: body.contact,
+        operating_hours: body.operating_hours,
+        image: body.image || null,
+        owner_name: body.owner_name || null,
+        established_year: body.established_year || null,
+        employee_count: body.employee_count || 0,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase update error:', error);
+      throw error;
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: updatedUmkm,
+      message: 'UMKM berhasil diperbarui!'
+    });
+
+  } catch (error) {
+    console.error('API Error:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        data: null,
+        message: 'Gagal memperbarui UMKM. Silakan coba lagi.'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: 'ID UMKM tidak ditemukan'
+        },
+        { status: 400 }
+      );
+    }
+
+    // Use mock response if Supabase not configured
+    if (!isSupabaseConfigured) {
+      console.log('📦 Using mock response for DELETE (Supabase not configured)');
+
+      return NextResponse.json({
+        success: true,
+        data: { id },
+        message: 'UMKM berhasil dihapus! (mock data - Supabase not configured)'
+      });
+    }
+
+    // Soft delete - set is_active to false instead of permanently deleting
+    const { data: deletedUmkm, error } = await supabase
+      .from('umkm')
+      .update({
+        is_active: false,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase delete error:', error);
+
+      if (error.code === 'PGRST116') {
+        return NextResponse.json(
+          {
+            success: false,
+            data: null,
+            message: 'UMKM tidak ditemukan'
+          },
+          { status: 404 }
+        );
+      }
+
+      throw error;
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: deletedUmkm,
+      message: 'UMKM berhasil dihapus!'
+    });
+
+  } catch (error) {
+    console.error('API Error:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        data: null,
+        message: 'Gagal menghapus UMKM. Silakan coba lagi.'
       },
       { status: 500 }
     );

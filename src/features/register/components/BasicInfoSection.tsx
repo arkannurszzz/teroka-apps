@@ -1,12 +1,13 @@
 import { Input } from '@/components/ui/input';
-import type { UmkmFormData } from '../types';
+import type { UmkmFormData, FormErrors } from '../types';
 
 interface BasicInfoSectionProps {
   formData: UmkmFormData;
+  errors: FormErrors;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
-export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) {
+export function BasicInfoSection({ formData, errors, onChange }: BasicInfoSectionProps) {
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b">
@@ -27,8 +28,11 @@ export function BasicInfoSection({ formData, onChange }: BasicInfoSectionProps) 
             value={formData.name}
             onChange={onChange}
             placeholder="Contoh: Warung Nasi Bu Ani"
-            className="w-full"
+            className={`w-full ${errors.name ? 'border-red-500' : ''}`}
           />
+          {errors.name && (
+            <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+          )}
         </div>
 
         {/* Kategori */}

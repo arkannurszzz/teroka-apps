@@ -1,12 +1,56 @@
 import { Input } from '@/components/ui/input';
-import type { UmkmFormData } from '../types';
+import { useState, useRef } from 'react';
+import Image from 'next/image';
+import type { UmkmFormData, FormErrors } from '../types';
 
 interface AdditionalInfoSectionProps {
   formData: UmkmFormData;
+  errors: FormErrors;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageChange: (file: File | null) => void;
 }
 
-export function AdditionalInfoSection({ formData, onChange }: AdditionalInfoSectionProps) {
+export function AdditionalInfoSection({ formData, errors, onChange, onImageChange }: AdditionalInfoSectionProps) {
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        onImageChange(null);
+        setImagePreview('');
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        onImageChange(null);
+        setImagePreview('');
+        return;
+      }
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      onImageChange(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview('');
+    onImageChange(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b">
@@ -14,23 +58,51 @@ export function AdditionalInfoSection({ formData, onChange }: AdditionalInfoSect
       </h2>
 
       <div className="space-y-4">
-        {/* URL Gambar */}
+        {/* Upload Gambar */}
         <div>
           <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
-            URL Foto/Logo UMKM
+            Foto/Logo UMKM
           </label>
-          <Input
+
+          {imagePreview && (
+            <div className="mb-3 relative w-full h-48 rounded-lg overflow-hidden bg-gray-100">
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                fill
+                className="object-cover"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+
+          <input
+            ref={fileInputRef}
             id="image"
             name="image"
-            type="url"
-            value={formData.image}
-            onChange={onChange}
-            placeholder="https://example.com/image.jpg"
-            className="w-full"
+            type="file"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            onChange={handleFileChange}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+              errors.image ? 'border-red-500' : 'border-gray-300'
+            }`}
           />
-          <p className="mt-1 text-xs text-gray-500">
-            Masukkan URL gambar dari internet
-          </p>
+          {errors.image && (
+            <p className="mt-1 text-xs text-red-500">{errors.image}</p>
+          )}
+          {!errors.image && (
+            <p className="mt-1 text-xs text-gray-500">
+              Format: JPG, PNG, WebP. Maksimal 5MB
+            </p>
+          )}
         </div>
 
         {/* Owner Name & Tahun Berdiri */}
@@ -46,8 +118,11 @@ export function AdditionalInfoSection({ formData, onChange }: AdditionalInfoSect
               value={formData.owner_name}
               onChange={onChange}
               placeholder="Bu Ani"
-              className="w-full"
+              className={`w-full ${errors.owner_name ? 'border-red-500' : ''}`}
             />
+            {errors.owner_name && (
+              <p className="mt-1 text-xs text-red-500">{errors.owner_name}</p>
+            )}
           </div>
 
           <div>
@@ -63,8 +138,11 @@ export function AdditionalInfoSection({ formData, onChange }: AdditionalInfoSect
               value={formData.established_year}
               onChange={onChange}
               placeholder="2015"
-              className="w-full"
+              className={`w-full ${errors.established_year ? 'border-red-500' : ''}`}
             />
+            {errors.established_year && (
+              <p className="mt-1 text-xs text-red-500">{errors.established_year}</p>
+            )}
           </div>
         </div>
 
@@ -78,11 +156,15 @@ export function AdditionalInfoSection({ formData, onChange }: AdditionalInfoSect
             name="employee_count"
             type="number"
             min="0"
+            max="10000"
             value={formData.employee_count}
             onChange={onChange}
             placeholder="5"
-            className="w-full"
+            className={`w-full ${errors.employee_count ? 'border-red-500' : ''}`}
           />
+          {errors.employee_count && (
+            <p className="mt-1 text-xs text-red-500">{errors.employee_count}</p>
+          )}
         </div>
       </div>
     </div>
