@@ -12,9 +12,9 @@ const headlineVariants = {
 export default function RotatingHeadline() {
   const [currentHeadline, setCurrentHeadline] = useState(0);
   const headlines = [
-    'Pilihan Teroka ',
+    'Teroka Hadir  ',
     'Bersama Teroka ',
-    'Hadir Teroka '
+    'Pilihan Teroka '
   ];
 
   useEffect(() => {
@@ -49,6 +49,7 @@ export default function RotatingHeadline() {
       </AnimatePresence>
       <br />
       <span className="block">Maju UMKM Indonesia</span>
+
     </div>
   );
 }

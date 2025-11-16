@@ -6,7 +6,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={`rounded-xl border bg-white text-gray-900 shadow ${className || ''}`}
+      className={`rounded-xl border border-white bg-white text-gray-900 shadow ${className || ''}`}
       {...props}
     />
   )

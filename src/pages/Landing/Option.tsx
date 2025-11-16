@@ -16,7 +16,7 @@ export default function Option() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Pilihan Teroka
+            Populer Teroka
           </h2>
           <motion.div 
             className="w-20 h-1 bg-orange-500 mx-auto rounded-full"
@@ -37,7 +37,7 @@ export default function Option() {
               <CardContent className="p-0 flex flex-col h-full">
                 <div className="relative h-72 md:h-96 w-full overflow-hidden">
                   <Image
-                    src="/images/landing/susuJahe-minuman.webp"
+                    src="/images/landing/sjm.webp"
                     alt="Susu Jahe Nakumi"
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -61,7 +61,7 @@ export default function Option() {
               <CardContent className="p-0 flex flex-col h-full">
                 <div className="relative h-72 md:h-96 w-full overflow-hidden">
                   <Image
-                    src="/images/landing/cuciSepatu.webp"
+                    src="/images/landing/kumbahcare.webp"
                     alt="Cuci Sepatu Kumbahcare"
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -83,7 +83,7 @@ export default function Option() {
               <CardContent className="p-0 flex flex-col h-full">
                 <div className="relative h-72 md:h-96 w-full overflow-hidden">
                   <Image
-                    src="/images/landing/MieAyam.webp"
+                    src="/images/landing/mieayambakso.png"
                     alt="Mie Ayam dan Bakso"
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"

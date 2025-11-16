@@ -289,12 +289,31 @@ export async function GET(
 
     console.log('Found UMKM:', umkm);
 
+    // Helper function to fix incorrect image URLs
+    const fixImageUrl = (url: string | null): string | null => {
+      if (!url) return null;
+
+      // If it's already a full Supabase URL, return as-is
+      if (url.includes('supabase.co') && url.includes('/storage/v1')) {
+        return url;
+      }
+
+      // Fix URLs with duplicate umkm-images in path: /umkm-images/umkm-images/... -> /umkm-images/...
+      let fixedUrl = url.replace(/\/umkm-images\/umkm-images\//g, '/umkm-images/');
+
+      // Fix URLs that start with umkm-images/ but should be just filename
+      // If path is umkm-images/filename.jpg, it should be just filename.jpg
+      fixedUrl = fixedUrl.replace(/^umkm-images\//, '');
+
+      return fixedUrl;
+    };
+
     // Transform data to match frontend format
     const transformedData = {
       id: umkm.id,
       name: umkm.name,
       category: umkm.category,
-      image: umkm.image || '',
+      image: fixImageUrl(umkm.image) || '',
       location: umkm.city,
       description: umkm.description || '',
       address: umkm.address,
@@ -310,6 +329,7 @@ export async function GET(
       employee_count: umkm.employee_count,
       total_customers: umkm.total_customers,
       total_reviews: umkm.total_reviews,
+      google_maps_link: umkm.google_maps_link,
       products: umkm.products || [],
       reviews: umkm.reviews || []
     };

@@ -1,10 +1,27 @@
-import { MapPin, Phone, Clock, Utensils, Coffee, Wrench, Shirt, Globe, Instagram, Facebook } from 'lucide-react';
-
+import React from 'react';
+import { MapPin, Phone, Clock, Utensils, Coffee, Wrench, Shirt, Globe, Users, Calendar, TrendingUp, MessageCircle } from 'lucide-react';
 import { Umkm } from '@/types/umkm';
 import { Card } from '@/components/ui';
 
 interface UmkmInfoProps {
   umkm: Umkm;
+}
+
+// Custom Google Maps Component using React refs
+function CustomGoogleMaps({ mapsHtml }: { mapsHtml: string }) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (containerRef.current && mapsHtml) {
+      containerRef.current.innerHTML = mapsHtml;
+    }
+  }, [mapsHtml]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-80 rounded-lg overflow-hidden shadow-sm"
+    />
+  );
 }
 
 // Category icons mapping
@@ -34,85 +51,140 @@ export default function UmkmInfo({ umkm }: UmkmInfoProps) {
     <div className="space-y-6">
       {/* Main Info Card */}
       <Card className="p-6">
-        <h2 className="text-xl font-bold mb-4">Informasi Toko</h2>
-
-        <div className="space-y-4">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b border-gray-200 pb-3">Informasi Toko</h2>
+        
+        <div className="space-y-6">
           {/* Description */}
           <div>
-            <h3 className="font-semibold mb-2">Deskripsi</h3>
-            <p className="text-gray-600 leading-relaxed">
+            <h3 className="font-semibold mb-3 text-gray-700">Deskripsi</h3>
+            <p className="text-gray-600 leading-relaxed text-sm">
               {umkm.description}
             </p>
           </div>
 
           {/* Category */}
           <div>
-            <h3 className="font-semibold mb-2">Kategori</h3>
-            <div className="flex items-center gap-2 bg-red-50 text-red-700 px-3 py-2 rounded-lg w-fit">
+            <h3 className="font-semibold mb-3 text-gray-700">Kategori</h3>
+            <div className="flex items-center gap-2 bg-red-50 text-red-700 px-4 py-2 rounded-full w-fit shadow-sm">
               <Icon className="w-4 h-4" />
-              <span className="capitalize">{umkm.category}</span>
+              <span className="capitalize font-medium">{umkm.category}</span>
+            </div>
+          </div>
+
+          {/* Contact & Social Media - Moved up for prominence */}
+          <div>
+            <h3 className="font-semibold mb-4 text-gray-700 flex items-center gap-2">
+              <Phone className="w-4 h-4 text-red-500" />
+              Kontak & Media Sosial
+            </h3>
+            <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
+              {/* Contact Information */}
+              {umkm.contact && (
+                <div className="flex items-center gap-3 text-gray-600">
+                  <div className="p-2 bg-white rounded-lg shadow-sm">
+                    <Phone className="w-4 h-4 text-red-500" />
+                  </div>
+                  <span className="font-medium">{umkm.contact}</span>
+                </div>
+              )}
+              {umkm.operating_hours && (
+                <div className="flex items-center gap-3 text-gray-600">
+                  <div className="p-2 bg-white rounded-lg shadow-sm">
+                    <Clock className="w-4 h-4 text-red-500" />
+                  </div>
+                  <span className="font-medium">Buka: {umkm.operating_hours}</span>
+                </div>
+              )}
+              {/* Social Media - Enhanced with better layout */}
+              <div className="flex gap-3 pt-2">
+                <button className="p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
+                  <Globe className="w-5 h-5 text-gray-700" />
+                </button>
+                {/* Add more social buttons if data available; placeholders for now */}
+                {/* Example: if (umkm.instagram) <button><Instagram className="..." /></button> */}
+              </div>
             </div>
           </div>
 
           {/* Location */}
           <div>
-            <h3 className="font-semibold mb-2">Lokasi</h3>
-            <div className="flex items-start gap-2 text-gray-600">
-              <MapPin className="w-5 h-5 mt-0.5 text-red-500" />
-              <span>{umkm.location}</span>
-            </div>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="font-semibold mb-2">Kontak</h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Phone className="w-5 h-5 text-red-500" />
-                <span>+62 812-3456-7890</span>
+            <h3 className="font-semibold mb-4 text-gray-700 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-red-500" />
+              Lokasi
+            </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Address Info */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-start gap-3 text-gray-600">
+                  <MapPin className="w-5 h-5 mt-0.5 text-red-500 shrink-0" />
+                  <div>
+                    <p className="font-medium">{umkm.address || umkm.location}</p>
+                    {umkm.city && umkm.province && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        {umkm.city}, {umkm.province}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Clock className="w-5 h-5 text-red-500" />
-                <span>Buka: 08:00 - 21:00</span>
+              
+              {/* Google Maps */}
+              <div>
+                {umkm.google_maps_link ? (
+                  <CustomGoogleMaps mapsHtml={umkm.google_maps_link} />
+                ) : (
+                  <div className="w-full h-80 flex items-center justify-center bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+                    <div className="text-center">
+                      <MapPin className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">
+                        ⚠️ Google Maps belum ditambahkan
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <h3 className="font-semibold mb-2">Media Sosial</h3>
-            <div className="flex gap-3">
-              <button className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                <Instagram className="w-5 h-5 text-gray-700" />
-              </button>
-              <button className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                <Facebook className="w-5 h-5 text-gray-700" />
-              </button>
-              <button className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                <Globe className="w-5 h-5 text-gray-700" />
-              </button>
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Quick Stats */}
+      {/* Quick Stats - Improved with better spacing and hover effects */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">4.5</div>
-          <div className="text-sm text-gray-600">Rating</div>
+        <Card className="p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
+          <div className="flex items-center justify-center mb-2">
+            <TrendingUp className="w-5 h-5 text-red-600 mr-2" />
+            <div className="text-2xl font-bold text-red-600">
+              {umkm.rating?.toFixed(1) || '0.0'}
+            </div>
+          </div>
+          <div className="text-sm text-gray-600 font-medium">Rating</div>
         </Card>
-        <Card className="p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">124</div>
-          <div className="text-sm text-gray-600">Ulasan</div>
+        <Card className="p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
+          <div className="flex items-center justify-center mb-2">
+            <MessageCircle className="w-5 h-5 text-red-600 mr-2" />
+            <div className="text-2xl font-bold text-red-600">
+              {umkm.total_reviews || 0}
+            </div>
+          </div>
+          <div className="text-sm text-gray-600 font-medium">Ulasan</div>
         </Card>
-        <Card className="p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">2+ Tahun</div>
-          <div className="text-sm text-gray-600">Bergabung</div>
+        <Card className="p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
+          <div className="flex items-center justify-center mb-2">
+            <Calendar className="w-5 h-5 text-red-600 mr-2" />
+            <div className="text-2xl font-bold text-red-600">
+              {umkm.established_year ? `${new Date().getFullYear() - umkm.established_year}+` : 'Baru'}
+            </div>
+          </div>
+          <div className="text-sm text-gray-600 font-medium">Tahun</div>
         </Card>
-        <Card className="p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">500+</div>
-          <div className="text-sm text-gray-600">Pelanggan</div>
+        <Card className="p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
+          <div className="flex items-center justify-center mb-2">
+            <Users className="w-5 h-5 text-red-600 mr-2" />
+            <div className="text-2xl font-bold text-red-600">
+              {umkm.total_customers ? (umkm.total_customers >= 1000 ? `${(umkm.total_customers / 1000).toFixed(1)}k+` : `${umkm.total_customers}+`) : '0+'}
+            </div>
+          </div>
+          <div className="text-sm text-gray-600 font-medium">Pelanggan</div>
         </Card>
       </div>
     </div>

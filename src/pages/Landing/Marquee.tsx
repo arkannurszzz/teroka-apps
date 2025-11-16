@@ -3,7 +3,7 @@ interface MarqueeProps {
     speed?: number;
 }
 
-export default function Marquee({ text = 'Teroka adalah ruang kurasi UMKM lokal — di mana setiap produk punya cerita, setiap usaha punya makna, dan setiap dukungan berarti.', speed = 30 }: MarqueeProps) {
+export default function Marquee({ text = 'Teroka adalah ruang kurasi UMKM lokal — di mana setiap produk punya cerita, setiap usaha punya makna, dan setiap dukungan sangat berarti.', speed = 30 }: MarqueeProps) {
     return (
         <div className="relative py-2 md:py-3 overflow-hidden bg-[#D9302C] w-full">
             <div className="flex overflow-hidden whitespace-nowrap w-full">

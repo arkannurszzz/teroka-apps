@@ -29,9 +29,12 @@ export function LocationSection({ formData, errors, onChange, onWilayahChange }:
   };
 
   const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedDistrict = districts.find(d => d.id === e.target.value);
+    const selectedDistrict = districts.find(d => d.name === e.target.value);
     if (selectedDistrict) {
       onWilayahChange('district', selectedDistrict.id, selectedDistrict.name);
+    } else {
+      // Handle case when value is empty (placeholder)
+      onWilayahChange('district', '', '');
     }
   };
 

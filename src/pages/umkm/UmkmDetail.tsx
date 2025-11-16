@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { ArrowLeft, MessageCircle, Heart, Share2 } from 'lucide-react';
-
 import { Umkm } from '@/types/umkm';
 import { Container } from '@/components/ui';
 import { Button } from '@/components/ui/button';
+
 import UmkmHeader from './UmkmHeader';
 import UmkmInfo from './UmkmInfo';
 import UmkmProducts from './UmkmProducts';
@@ -23,7 +23,7 @@ export default function UmkmDetail({ umkm }: UmkmDetailProps) {
     return (
       <Container className="py-8">
         <div className="text-center">
-          <p>Loading...</p>
+          <p className="text-gray-500">Loading...</p>
         </div>
       </Container>
     );
@@ -57,25 +57,26 @@ export default function UmkmDetail({ umkm }: UmkmDetailProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Bar */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <Container className="py-4">
           <div className="flex items-center justify-between">
             <Button
               variant="outline"
               size="sm"
               onClick={handleBack}
-              className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Kembali
             </Button>
-
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleFavorite}
-                className={`p-2 ${isFavorite ? 'text-red-600' : 'text-gray-600'}`}
+                className={`p-2 rounded-lg transition-colors ${
+                  isFavorite ? 'text-red-600 hover:bg-red-50' : 'text-gray-600 hover:bg-gray-50'
+                }`}
               >
                 <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
               </Button>
@@ -83,7 +84,7 @@ export default function UmkmDetail({ umkm }: UmkmDetailProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
-                className="p-2 text-gray-600"
+                className="p-2 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 <Share2 className="w-5 h-5" />
               </Button>
@@ -93,34 +94,34 @@ export default function UmkmDetail({ umkm }: UmkmDetailProps) {
       </div>
 
       {/* Content */}
-      <UmkmHeader umkm={umkm} />
-
-      <Container className="py-6 space-y-8">
-        <UmkmInfo umkm={umkm} />
-        <UmkmProducts umkmId={umkm.id} products={umkm.products} />
-        <UmkmReviews
-          umkmId={umkm.id}
-          reviews={umkm.reviews}
-          averageRating={umkm.rating}
-          totalReviews={umkm.total_reviews}
-        />
-      </Container>
+      <div className="pb-20"> {/* Add padding bottom for fixed action bar */}
+        <UmkmHeader umkm={umkm} />
+        <Container className="py-6 space-y-8">
+          <UmkmInfo umkm={umkm} />
+          <UmkmProducts umkmId={umkm.id} products={umkm.products} />
+          <UmkmReviews
+            reviews={umkm.reviews}
+            averageRating={umkm.rating}
+            totalReviews={umkm.total_reviews}
+          />
+        </Container>
+      </div>
 
       {/* Fixed Bottom Action */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40 shadow-lg">
         <Container>
           <div className="flex gap-3">
             <Button
               variant="outline"
               size="lg"
-              className="flex-1 flex items-center gap-2 border-red-600 text-red-600 hover:bg-red-50"
+              className="flex-1 flex items-center justify-center gap-2 border-red-600 text-red-600 hover:bg-red-50 transition-colors"
             >
               <MessageCircle className="w-5 h-5" />
               Chat
             </Button>
             <Button
               size="lg"
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white transition-colors"
             >
               Kunjungi Toko
             </Button>

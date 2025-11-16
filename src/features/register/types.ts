@@ -1,3 +1,11 @@
+export interface ProductFormData {
+  id?: string; // For editing existing products
+  name: string;
+  description: string;
+  price: string;
+  image: string | File;
+}
+
 export interface UmkmFormData {
   name: string;
   category: string;
@@ -15,6 +23,15 @@ export interface UmkmFormData {
   owner_name: string;
   established_year: string;
   employee_count: string;
+  // New field for featured products
+  featured_products: ProductFormData[];
+}
+
+export interface ProductFormErrors {
+  name?: string;
+  description?: string;
+  price?: string;
+  image?: string;
 }
 
 export interface FormErrors {
@@ -34,6 +51,7 @@ export interface FormErrors {
   owner_name?: string;
   established_year?: string;
   employee_count?: string;
+  featured_products?: ProductFormErrors[];
 }
 
 export const initialFormData: UmkmFormData = {
@@ -53,6 +71,7 @@ export const initialFormData: UmkmFormData = {
   owner_name: '',
   established_year: '',
   employee_count: '',
+  featured_products: [],
 };
 
 export const validateFormField = (name: string, value: any): string | undefined => {
@@ -85,6 +104,12 @@ export const validateFormField = (name: string, value: any): string | undefined 
     case 'province':
       if (!value) return 'Provinsi wajib diisi';
       if (value.length < 2) return 'Nama provinsi tidak valid';
+      break;
+
+    case 'owner_name':
+      if (!value) return 'Nama pemilik wajib diisi';
+      if (value.length < 2) return 'Nama pemilik minimal 2 karakter';
+      if (value.length > 50) return 'Nama pemilik maksimal 50 karakter';
       break;
 
     case 'established_year':
@@ -123,16 +148,83 @@ export const validateFormField = (name: string, value: any): string | undefined 
   return undefined;
 };
 
+export const validateProductField = (name: string, value: any): string | undefined => {
+  switch (name) {
+    case 'name':
+      if (!value) return 'Nama produk wajib diisi';
+      if (value.length < 2) return 'Nama produk minimal 2 karakter';
+      if (value.length > 100) return 'Nama produk maksimal 100 karakter';
+      break;
+
+    case 'description':
+      if (!value) return 'Deskripsi produk wajib diisi';
+      if (value.length < 10) return 'Deskripsi produk minimal 10 karakter';
+      if (value.length > 500) return 'Deskripsi produk maksimal 500 karakter';
+      break;
+
+    case 'price':
+      if (!value) return 'Harga produk wajib diisi';
+      const price = parseInt(value.replace(/\D/g, ''));
+      if (isNaN(price) || price < 0) return 'Harga tidak valid';
+      if (price < 1000) return 'Harga minimal Rp 1.000';
+      if (price > 999999999) return 'Harga terlalu tinggi';
+      break;
+
+    case 'image':
+      if (value instanceof File) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(value.type)) {
+          return 'Format file harus JPG, PNG, atau WebP';
+        }
+        // Validate file size (max 3MB for product images)
+        const maxSize = 3 * 1024 * 1024;
+        if (value.size > maxSize) {
+          return 'Ukuran file maksimal 3MB';
+        }
+      }
+      break;
+  }
+
+  return undefined;
+};
+
 export const validateForm = (formData: UmkmFormData): FormErrors => {
   const errors: FormErrors = {};
 
-  // Validate all fields
+  // Validate all UMKM fields
   Object.keys(formData).forEach((key) => {
-    const error = validateFormField(key, formData[key as keyof UmkmFormData]);
-    if (error) {
-      errors[key as keyof FormErrors] = error;
+    if (key !== 'featured_products') {
+      const error = validateFormField(key, formData[key as keyof UmkmFormData]);
+      if (error) {
+        errors[key as keyof FormErrors] = error;
+      }
     }
   });
+
+  // Validate featured products
+  if (formData.featured_products && formData.featured_products.length > 0) {
+    const productErrors: ProductFormErrors[] = [];
+
+    formData.featured_products.forEach((product, index) => {
+      const productError: ProductFormErrors = {};
+
+      Object.keys(product).forEach((field) => {
+        const error = validateProductField(field, product[field as keyof ProductFormData]);
+        if (error) {
+          productError[field as keyof ProductFormErrors] = error;
+        }
+      });
+
+      if (Object.keys(productError).length > 0) {
+        productErrors[index] = productError;
+      }
+    });
+
+    if (productErrors.length > 0) {
+      errors.featured_products = productErrors;
+    }
+  }
 
   // Validate time range
   if (formData.operating_hours_start && formData.operating_hours_end) {
@@ -155,6 +247,7 @@ export const isFormValid = (formData: UmkmFormData, errors: FormErrors): boolean
     'contact',
     'operating_hours_start',
     'operating_hours_end',
+    'owner_name',
   ];
 
   const hasAllRequired = requiredFields.every((field) => {

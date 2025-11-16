@@ -1,6 +1,4 @@
 import Image from 'next/image';
-import { Star } from 'lucide-react';
-
 import { Card } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 
@@ -18,7 +16,7 @@ interface UmkmProductsProps {
   products?: Product[];
 }
 
-export default function UmkmProducts({ umkmId, products = [] }: UmkmProductsProps) {
+export default function UmkmProducts({ products = [] }: UmkmProductsProps) {
   // Show message if no products
   if (products.length === 0) {
     return (
@@ -35,6 +33,7 @@ export default function UmkmProducts({ umkmId, products = [] }: UmkmProductsProp
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">Produk Unggulan</h2>
         {products.length > 4 && (
@@ -44,6 +43,7 @@ export default function UmkmProducts({ umkmId, products = [] }: UmkmProductsProp
         )}
       </div>
 
+      {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.slice(0, 8).map((product) => (
           <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -55,7 +55,6 @@ export default function UmkmProducts({ umkmId, products = [] }: UmkmProductsProp
                 fill
                 className="object-cover"
               />
-
               {/* Available Badge */}
               {product.is_available !== false && (
                 <div className="absolute top-2 right-2 bg-green-500/95 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-semibold text-white">
@@ -70,18 +69,19 @@ export default function UmkmProducts({ umkmId, products = [] }: UmkmProductsProp
                 {product.name}
               </h3>
               {product.description && (
-                <p className="text-xs text-gray-600 mb-2 line-clamp-2">
+                <p className="text-xs text-gray-600 mb-3 line-clamp-2">
                   {product.description}
                 </p>
               )}
-
-              <div className="flex items-center justify-between mt-3">
-                <div>
-                  <div className="text-lg font-bold text-red-600">
-                    Rp {product.price.toLocaleString('id-ID')}
-                  </div>
+              <div className="flex items-center justify-between">
+                <div className="text-lg font-bold text-red-600">
+                  Rp {product.price.toLocaleString('id-ID')}
                 </div>
-                <Button size="sm" className="bg-red-600 hover:bg-red-700" disabled={product.is_available === false}>
+                <Button
+                  size="sm"
+                  className="bg-red-600 hover:bg-red-700"
+                  disabled={product.is_available === false}
+                >
                   {product.is_available === false ? 'Habis' : '+ Keranjang'}
                 </Button>
               </div>

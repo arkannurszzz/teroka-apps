@@ -1,19 +1,10 @@
-import Image from 'next/image';
 import { Star, ThumbsUp, MessageCircle } from 'lucide-react';
-
 import { Card } from '@/components/ui';
 import { Button } from '@/components/ui/button';
-
-interface Review {
-  id: string;
-  user_name: string;
-  rating: number;
-  comment: string;
-  created_at: string;
-}
+// Import the global Review type from umkm.d.ts to ensure consistency
+import type { Review } from '@/types/umkm';
 
 interface UmkmReviewsProps {
-  umkmId: string;
   reviews?: Review[];
   averageRating?: number;
   totalReviews?: number;
@@ -22,6 +13,8 @@ interface UmkmReviewsProps {
 // Helper function to format date
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Tanggal tidak valid';
+
   const now = new Date();
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -34,18 +27,25 @@ function formatDate(dateString: string): string {
   return `${Math.floor(diffDays / 365)} tahun yang lalu`;
 }
 
-export default function UmkmReviews({ umkmId, reviews = [], averageRating = 0, totalReviews = 0 }: UmkmReviewsProps) {
+export default function UmkmReviews({
+  reviews = [],
+  averageRating = 0,
+  totalReviews = 0,
+}: UmkmReviewsProps) {
   // Calculate rating distribution
   const ratingCounts = [0, 0, 0, 0, 0]; // index 0=1star, 4=5stars
-  reviews.forEach(review => {
+  reviews.forEach((review) => {
     if (review.rating >= 1 && review.rating <= 5) {
       ratingCounts[review.rating - 1]++;
     }
   });
 
-  const displayRating = averageRating > 0 ? averageRating : (
-    reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0
-  );
+  const displayRating =
+    averageRating > 0
+      ? averageRating
+      : reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
 
   const displayTotal = totalReviews > 0 ? totalReviews : reviews.length;
 
@@ -92,7 +92,9 @@ export default function UmkmReviews({ umkmId, reviews = [], averageRating = 0, t
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Overall Rating */}
           <div className="text-center">
-            <div className="text-4xl font-bold text-red-600 mb-2">{displayRating.toFixed(1)}</div>
+            <div className="text-4xl font-bold text-red-600 mb-2">
+              {displayRating.toFixed(1)}
+            </div>
             <div className="flex items-center justify-center gap-1 mb-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
@@ -125,9 +127,7 @@ export default function UmkmReviews({ umkmId, reviews = [], averageRating = 0, t
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
-                  <span className="text-sm text-gray-600 w-8">
-                    {count}
-                  </span>
+                  <span className="text-sm text-gray-600 w-8">{count}</span>
                 </div>
               );
             })}
@@ -146,37 +146,45 @@ export default function UmkmReviews({ umkmId, reviews = [], averageRating = 0, t
                   {/* Avatar with first letter of username */}
                   <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                     <span className="text-red-600 font-semibold text-lg">
-                      {review.user_name.charAt(0).toUpperCase()}
+                      {review.user_name?.charAt(0).toUpperCase() || '?'}
                     </span>
                   </div>
                 </div>
                 <div>
-                  <div className="font-semibold">{review.user_name}</div>
+                  <div className="font-semibold">{review.user_name || 'Pengguna'}</div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                       <span>{review.rating}</span>
                     </div>
                     <span>·</span>
-                    <span>{formatDate(review.created_at)}</span>
+                    {review.created_at && <span>{formatDate(review.created_at)}</span>}
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Review Content */}
-            <p className="text-gray-700 mb-4">{review.comment}</p>
+            {review.comment && <p className="text-gray-700 mb-4">{review.comment}</p>}
 
             {/* Review Actions */}
             <div className="flex items-center gap-4">
-              <button className="flex items-center gap-1 text-sm text-gray-600 hover:text-red-600">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-red-600 h-auto px-0"
+              >
                 <ThumbsUp className="w-4 h-4" />
                 <span>Membantu</span>
-              </button>
-              <button className="flex items-center gap-1 text-sm text-gray-600 hover:text-red-600">
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-red-600 h-auto px-0"
+              >
                 <MessageCircle className="w-4 h-4" />
                 <span>Balas</span>
-              </button>
+              </Button>
             </div>
           </Card>
         ))}

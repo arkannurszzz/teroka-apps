@@ -1,5 +1,4 @@
 import { Utensils, Coffee, Wrench, Shirt, List } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/ui';
 
@@ -21,7 +20,10 @@ const categoryConfig: Record<
   fashion: { label: 'Fashion', icon: Shirt },
 };
 
-export default function CategoryTabs({ selectedCategory, onCategoryChange }: CategoryTabsProps) {
+export default function CategoryTabs({
+  selectedCategory,
+  onCategoryChange,
+}: CategoryTabsProps) {
   return (
     <Container className="py-4 sm:py-6">
       <div className="flex flex-wrap justify-center gap-2 sm:gap-3 px-2">
@@ -34,7 +36,8 @@ export default function CategoryTabs({ selectedCategory, onCategoryChange }: Cat
               size="sm"
               onClick={() => onCategoryChange(key as Category)}
               className={`
-                rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm flex items-center gap-1 sm:gap-2 font-medium transition-all whitespace-nowrap
+                rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm 
+                flex items-center gap-1 sm:gap-2 font-medium transition-all whitespace-nowrap
                 ${isActive
                   ? 'bg-red-600 hover:bg-red-700 text-white shadow-md'
                   : 'border-gray-300 text-gray-700 hover:bg-gray-100'

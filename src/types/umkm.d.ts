@@ -2,7 +2,7 @@ export interface Umkm {
   id: string;
   name: string;
   category: 'makanan' | 'minuman' | 'jasa' | 'fashion' | 'lainnya';
-  image: string;
+  image: string | null;
   location: string;
   description?: string;
   rating?: number;
@@ -12,6 +12,7 @@ export interface Umkm {
   province?: string;
   latitude?: number;
   longitude?: number;
+  google_maps_link?: string;
   contact?: string;
   operating_hours?: string;
   owner_name?: string;

@@ -54,8 +54,61 @@ export function AdditionalInfoSection({ formData, errors, onChange, onImageChang
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 mb-4 pb-2 border-b">
-        Informasi Tambahan (Opsional)
+        Finalisasi UMKM
       </h2>
+
+      <p className="text-gray-600 mb-6">
+        Lengkapi detail informasi UMKM Anda dan siap untuk didaftarkan di platform Teroka.
+      </p>
+
+      {/* Summary Section */}
+      {formData.name && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+            📋 Ringkasan UMKM Anda
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-700">Nama UMKM:</span>
+              <p className="text-gray-900">{formData.name}</p>
+            </div>
+
+            <div>
+              <span className="font-medium text-gray-700">Kategori:</span>
+              <p className="text-gray-900 capitalize">{formData.category}</p>
+            </div>
+
+            <div>
+              <span className="font-medium text-gray-700">Lokasi:</span>
+              <p className="text-gray-900">{formData.city}, {formData.province}</p>
+            </div>
+
+            <div>
+              <span className="font-medium text-gray-700">Kontak:</span>
+              <p className="text-gray-900">{formData.contact}</p>
+            </div>
+          </div>
+
+          {formData.featured_products && formData.featured_products.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-blue-200">
+              <span className="font-medium text-gray-700">Produk Unggulan:</span>
+              <div className="mt-2 space-y-1">
+                {formData.featured_products.slice(0, 3).map((product, index) => (
+                  <div key={index} className="text-gray-900">
+                    • {product.name} - Rp{product.price}
+                  </div>
+                ))}
+                {formData.featured_products.length > 3 && (
+                  <div className="text-gray-600 text-xs">
+                    ... dan {formData.featured_products.length - 3} produk lainnya
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="space-y-4">
         {/* Upload Gambar */}

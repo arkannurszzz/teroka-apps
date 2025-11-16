@@ -1,5 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase, supabaseAdmin, isSupabaseConfigured, isServiceRoleConfigured } from '@/lib/supabase';
+
+// Type for mock data storage
+interface MockUmkmItem {
+  id: string;
+  name: string;
+  category: string;
+  description?: string;
+  address: string;
+  city?: string;
+  province?: string;
+  latitude?: number;
+  longitude?: number;
+  google_maps_link?: string;
+  rating?: number;
+  contact?: string;
+  operating_hours?: string;
+  image?: string;
+  owner_name?: string;
+  established_year?: number;
+  employee_count?: number;
+  total_customers?: number;
+  total_reviews?: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+// In-memory storage for mock data (for development)
+const mockDataStorage: MockUmkmItem[] = [];
 
 // Mock data fallback
 const mockUmkmData = [
@@ -13,6 +41,7 @@ const mockUmkmData = [
     province: 'DKI Jakarta',
     latitude: -6.2088,
     longitude: 106.8456,
+    google_maps_link: 'https://www.google.com/maps/place/Warung+Nasi+Bu+Ani',
     rating: 4.5,
     contact: '+62812345678',
     operating_hours: '08:00-21:00',
@@ -141,6 +170,30 @@ const mockUmkmData = [
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   },
+  {
+    id: 'ende-laundry-1',
+    name: 'Ende Laundry',
+    category: 'jasa',
+    description: 'Jasa laundry profesional dengan harga terjangkau. Cuci kering, setrika, dan layanan laundry kiloan.',
+    address: 'Jl. Cibinong Raya No. 45',
+    city: 'Bogor',
+    province: 'Jawa Barat',
+    latitude: -6.65658049333821,
+    longitude: 106.847450575786,
+    google_maps_link: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.9220732667695!2d106.847450575786!3d-6.65658049333821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c9016d1f8b89%3A0x9fcb511ae5f91f61!2sEnde%20laundry!5e0!3m2!1sen!2sid!4v1763198127641!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+    rating: 4.7,
+    contact: '+628123456789',
+    operating_hours: '08:00-20:00',
+    image: 'https://images.unsplash.com/photo-1534753449637-1cbaebf8ccaa?w=800',
+    owner_name: 'Bapak Endi',
+    established_year: 2020,
+    employee_count: 8,
+    total_customers: 850,
+    total_reviews: 32,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
 ];
 
 export async function GET() {
@@ -149,26 +202,29 @@ export async function GET() {
     if (!isSupabaseConfigured) {
       console.log('📦 Using mock data (Supabase not configured)');
 
-      const transformedData = mockUmkmData.map(umkm => ({
+      // Combine static mock data with dynamically added data
+      const allMockData = [...mockUmkmData, ...mockDataStorage];
+
+      const transformedData = allMockData.map(umkm => ({
         id: umkm.id,
         name: umkm.name,
         category: umkm.category,
-        image: umkm.image || '',
-        location: umkm.city,
+        image: umkm.image || null,
+        location: umkm.city || 'Unknown',
         description: umkm.description || '',
         address: umkm.address,
         city: umkm.city,
         province: umkm.province,
-        latitude: umkm.latitude,
-        longitude: umkm.longitude,
+        latitude: umkm.latitude || -6.2088,
+        longitude: umkm.longitude || 106.8456,
         rating: umkm.rating,
         contact: umkm.contact,
         operating_hours: umkm.operating_hours,
         owner_name: umkm.owner_name,
         established_year: umkm.established_year,
         employee_count: umkm.employee_count,
-        total_customers: umkm.total_customers,
-        total_reviews: umkm.total_reviews
+        total_customers: umkm.total_customers || 0,
+        total_reviews: umkm.total_reviews || 0
       }));
 
       return NextResponse.json({
@@ -179,28 +235,113 @@ export async function GET() {
       });
     }
 
-    // Fetch all active UMKM from Supabase
+    // Fetch all active UMKM from Supabase with retry logic
     if (!supabase) {
       throw new Error('Supabase client is not configured');
     }
 
-    const { data: umkmData, error } = await supabase
-      .from('umkm')
-      .select('*')
-      .eq('is_active', true)
-      .order('rating', { ascending: false });
+    let umkmData = null;
+    let error = null;
+    let retryCount = 0;
+    const maxRetries = 3;
 
-    if (error) {
-      console.error('Supabase error:', error);
-      throw error;
+    // Retry logic for fetch failures
+    while (retryCount < maxRetries) {
+      try {
+        console.log(`🔄 Attempting to fetch from Supabase (attempt ${retryCount + 1}/${maxRetries})`);
+
+        const result = await supabase
+          .from('umkm')
+          .select('*')
+          .eq('is_active', true)
+          .order('rating', { ascending: false });
+
+        umkmData = result.data;
+        error = result.error;
+
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
+
+        // Success - break out of retry loop
+        break;
+
+      } catch (fetchError: any) {
+        console.error(`Fetch attempt ${retryCount + 1} failed:`, fetchError);
+        retryCount++;
+
+        if (retryCount >= maxRetries) {
+          console.error('❌ All retry attempts failed, falling back to mock data');
+          // Fallback to mock data if all retries fail
+          const transformedData = mockUmkmData.map(umkm => ({
+            id: umkm.id,
+            name: umkm.name,
+            category: umkm.category,
+            image: umkm.image || null,
+            location: umkm.city || 'Unknown',
+            description: umkm.description || '',
+            address: umkm.address,
+            city: umkm.city,
+            province: umkm.province,
+            latitude: umkm.latitude || -6.2088,
+            longitude: umkm.longitude || 106.8456,
+            google_maps_link: umkm.google_maps_link,
+            rating: umkm.rating,
+            contact: umkm.contact,
+            operating_hours: umkm.operating_hours,
+            owner_name: umkm.owner_name,
+            established_year: umkm.established_year,
+            employee_count: umkm.employee_count,
+            total_customers: umkm.total_customers || 0,
+            total_reviews: umkm.total_reviews || 0
+          }));
+
+          return NextResponse.json({
+            success: true,
+            data: transformedData,
+            message: 'Data berhasil dimuat (fallback to mock data due to connection issues)',
+            total: transformedData.length
+          });
+        }
+
+        // Wait before retry (exponential backoff)
+        const delay = Math.pow(2, retryCount - 1) * 1000; // 1s, 2s, 4s
+        console.log(`⏳ Waiting ${delay}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
+
+    // Helper function to fix incorrect image URLs
+    const fixImageUrl = (url: string | null): string | null => {
+      if (!url) return null;
+
+      // If it's a mock URL from picsum.photos, return as-is
+      if (url.includes('picsum.photos')) {
+        return url;
+      }
+
+      // If it's already a full Supabase URL, return as-is
+      if (url.includes('supabase.co') && url.includes('/storage/v1')) {
+        return url;
+      }
+
+      // Fix URLs with duplicate umkm-images in path: /umkm-images/umkm-images/... -> /umkm-images/...
+      let fixedUrl = url.replace(/\/umkm-images\/umkm-images\//g, '/umkm-images/');
+
+      // Fix URLs that start with umkm-images/ but should be just filename
+      // If path is umkm-images/filename.jpg, it should be just filename.jpg
+      fixedUrl = fixedUrl.replace(/^umkm-images\//, '');
+
+      return fixedUrl;
+    };
 
     // Transform data to match frontend format
     const transformedData = umkmData?.map(umkm => ({
       id: umkm.id,
       name: umkm.name,
       category: umkm.category,
-      image: umkm.image || '',
+      image: fixImageUrl(umkm.image),
       location: umkm.city,
       description: umkm.description || '',
       address: umkm.address,
@@ -208,6 +349,7 @@ export async function GET() {
       province: umkm.province,
       latitude: umkm.latitude,
       longitude: umkm.longitude,
+      google_maps_link: umkm.google_maps_link,
       rating: umkm.rating,
       contact: umkm.contact,
       operating_hours: umkm.operating_hours,
@@ -226,6 +368,31 @@ export async function GET() {
     });
   } catch (error) {
     console.error('API Error:', error);
+
+    // Log more details for debugging fetch errors
+    if (error instanceof Error) {
+      if (error.message.includes('fetch failed')) {
+        console.error('🔗 Fetch failure details:', {
+          message: error.message,
+          stack: error.stack,
+          timestamp: new Date().toISOString(),
+          supabaseConfigured: isSupabaseConfigured,
+          supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'configured' : 'missing'
+        });
+
+        // Return a more user-friendly error for fetch failures
+        return NextResponse.json(
+          {
+            success: false,
+            data: null,
+            message: 'Koneksi ke database gagal. Silakan coba lagi beberapa saat.',
+            errorType: 'connection_error'
+          },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       {
         success: false,
@@ -280,8 +447,13 @@ export async function POST(request: NextRequest) {
         created_at: new Date().toISOString(),
         rating: 0,
         total_reviews: 0,
-        is_active: true
+        is_active: true,
+        latitude: -6.2088 + (Math.random() - 0.5) * 0.1, // Random location around Jakarta
+        longitude: 106.8456 + (Math.random() - 0.5) * 0.1,
       };
+
+      // Store in mock data storage for GET requests
+      mockDataStorage.push(mockResponse);
 
       return NextResponse.json({
         success: true,
@@ -291,11 +463,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new UMKM to Supabase
-    if (!supabase) {
+    // Use admin client if available, otherwise use regular client
+    const supabaseClient = supabaseAdmin || supabase;
+    if (!supabaseClient) {
       throw new Error('Supabase client is not configured');
     }
 
-    const { data: newUmkm, error } = await supabase
+    console.log('📝 Creating UMKM with data:', {
+      name: body.name,
+      category: body.category,
+      image: body.image,
+      city: body.city,
+      province: body.province
+    });
+
+    // Insert UMKM with transaction to also add products
+    const { data: newUmkm, error: umkmError } = await supabaseClient
       .from('umkm')
       .insert([
         {
@@ -303,8 +486,11 @@ export async function POST(request: NextRequest) {
           category: body.category,
           description: body.description || null,
           address: body.address,
-          city: body.city,
+          province_id: body.province_id || null,
           province: body.province,
+          city_id: body.city_id || null,
+          city: body.city,
+          district: body.district || null,
           latitude: body.latitude || 0,
           longitude: body.longitude || 0,
           contact: body.contact,
@@ -319,9 +505,54 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) {
-      console.error('Supabase insert error:', error);
-      throw error;
+    if (umkmError) {
+      console.error('Supabase insert error:', umkmError);
+      throw umkmError;
+    }
+
+    // If there are products, insert them
+    if (body.products && Array.isArray(body.products) && body.products.length > 0) {
+      console.log('📦 Inserting products:', body.products.length);
+
+      const productsToInsert = body.products.map((product: any) => ({
+        umkm_id: newUmkm.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        image: product.image || null,
+        is_available: product.is_available !== undefined ? product.is_available : true
+      }));
+
+      const { error: productsError } = await supabaseClient
+        .from('products')
+        .insert(productsToInsert);
+
+      if (productsError) {
+        console.error('❌ Error inserting products:', productsError);
+        // Don't fail the entire operation if products fail to insert
+        // UMKM is already created, products can be added later
+        console.warn('⚠️ UMKM created but products failed to insert');
+      } else {
+        console.log('✅ Products inserted successfully');
+      }
+    }
+
+    if (umkmError) {
+      console.error('Supabase insert error:', umkmError);
+
+      // If it's an RLS policy error and we don't have service role key, suggest solution
+      if (umkmError.message?.includes('row-level security policy') && !isServiceRoleConfigured) {
+        return NextResponse.json(
+          {
+            success: false,
+            data: null,
+            message: 'RLS Policy Error: Anda perlu menambahkan SUPABASE_SERVICE_ROLE_KEY ke .env.local untuk bypass RLS policy saat registrasi UMKM baru.'
+          },
+          { status: 403 }
+        );
+      }
+
+      throw umkmError;
     }
 
     return NextResponse.json({
@@ -407,6 +638,10 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update UMKM in Supabase
+    if (!supabase) {
+      throw new Error('Supabase client is not configured');
+    }
+
     const { data: updatedUmkm, error } = await supabase
       .from('umkm')
       .update({
@@ -482,6 +717,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Soft delete - set is_active to false instead of permanently deleting
+    if (!supabase) {
+      throw new Error('Supabase client is not configured');
+    }
+
     const { data: deletedUmkm, error } = await supabase
       .from('umkm')
       .update({

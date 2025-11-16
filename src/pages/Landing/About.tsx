@@ -61,7 +61,7 @@ const TerokaCard = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Tingkatkan penjualan hingga 3x dengan pengiriman efisien dan proses pesanan yang sederhana – dirancang khusus untuk UMKM di lingkungan lokal Anda.
+              Tingkatkan penjualan hingga 3x dengan platform yang mendukung visibilitas UMKM – dirancang khusus untuk usaha lokal Anda.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

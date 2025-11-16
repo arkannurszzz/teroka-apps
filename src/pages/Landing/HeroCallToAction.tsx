@@ -5,7 +5,7 @@ export default function HeroCallToAction() {
   return (
     <>
       <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl opacity-90 tracking-wide">
-        Temukan dan dukung UMKM lokal dengan platform aman dan efisien – nikmati pengalaman belanja yang cepat dan terpercaya.
+      Temukan dan dukung UMKM lokal melalui platform terpercaya – nikmati pengalaman belanja yang aman, nyaman, dan menyenangkan.
       </p>
       <Link
         href="/search"
