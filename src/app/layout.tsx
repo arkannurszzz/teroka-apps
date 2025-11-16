@@ -7,7 +7,7 @@ import SiteFooter from '@/components/layout/SiteFooter';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'King Teroka - Eksplorasi UMKM Indonesia',
+  title: 'Teroka - Eksplorasi UMKM Indonesia',
   description: 'Temukan dan dukung UMKM lokal terbaik!',
 };
 
